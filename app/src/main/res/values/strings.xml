@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">Toque Toque</string>
+    <string name="add_recipe">Ajouter une nouvelle recette</string>
+    <string name="upload_photos">Cliquez pour ajouter des photos</string>
+    <string name="upload_photos_sec">Présentez votre plat final et/ou les différentes étapes</string>
+    <string name="title">Titre</string>
+    <string name="title_example">ex. Galette de pomme de terre</string>
+    <string name="story_description">Histoire &amp; Description</string>
+    <string name="story_desc_ex">Pourquoi ce plat est-il spécial pour vous ?</string>
+    <string name="starters">Entrées</string>
+    <string name="main_courses">Plats</string>
+    <string name="prep_time">Temps de préparation (mins)</string>
+    <string name="cook_time">Temps de cuisson (mins)</string>
+    <string name="ingredients">Ingrédients</string>
+    <string name="add_group">Ajouter un groupe</string>
+    <string name="quantity">Quantité</string>
+    <string name="ingredient">Ingrédient</string>
+    <string name="add_ingredient">+ Ajouter un ingrédient</string>
+    <string name="add_step">+ Ajouter une étape</string>
+    <string name="describe_step">Décrivez cette étape ...</string>
+    <string name="save_recipe">Sauvegarder la recette</string>
+    <string name="unit">Unité</string>
+    <string name="group_name">Nom du groupe (ex. Pâte brisée)</string>
+    <string name="servings">Portions</string>
+    <string name="cooling_time">Temps de réfrigération (mins)</string>
+    <string name="freezing_time">Temps de congélation (mins)</string>
+    <string name="requires_cooking">Cuisson</string>
+    <string name="requires_cooling">Réfrigération</string>
+    <string name="requires_freezing">Congélation</string>
 </resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Toque Toque</string>
+    <string name="add_recipe">Add a new recipe</string>
+    <string name="upload_photos">Tap to add photos</string>
+    <string name="upload_photos_sec">Showcase your final dish or step-by-step</string>
+    <string name="title">Title</string>
+    <string name="title_example">e.g., Potato galette</string>
+    <string name="story_description">Story &amp; Description</string>
+    <string name="story_desc_ex">What makes this dish special ?</string>
+    <string name="starters">Starters</string>
+    <string name="main_courses">Main courses</string>
+    <string name="prep_time">Prep time (mins)</string>
+    <string name="cook_time">Cook time (mins)</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="add_group">Add group</string>
+    <string name="quantity">Quantity</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="add_ingredient">+ Add Ingredient</string>
+    <string name="add_step">+ Add step</string>
+    <string name="describe_step">Describe this step ...</string>
+    <string name="save_recipe">Save recipe</string>
+    <string name="unit">Unit</string>
+    <string name="group_name">Group Name (e.g., For the Dough)</string>
+    <string name="servings">Servings</string>
+    <string name="cooling_time">Cooling time (mins)</string>
+    <string name="freezing_time">Freezing time (mins)</string>
+    <string name="requires_cooking">Cooking</string>
+    <string name="requires_cooling">Cooling</string>
+    <string name="requires_freezing">Freezing</string>
+</resources>
