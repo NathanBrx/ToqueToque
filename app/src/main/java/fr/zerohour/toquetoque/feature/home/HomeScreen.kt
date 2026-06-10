@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -75,9 +74,6 @@ fun HomeScreen() {
                     actionIconContentColor = Color.Unspecified
                 )
             )
-        },
-        bottomBar = {
-            HomeBottomNavigation()
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
@@ -162,34 +158,5 @@ fun CategoryCard(
             color = Color.White,
             modifier = Modifier.padding(16.dp)
         )
-    }
-}
-
-@Composable
-fun HomeBottomNavigation() {
-    var selectedItem by remember { mutableIntStateOf(1) }
-    val items = listOf("Feed", "Collection", "Ajouter")
-    val icons = listOf(Icons.Outlined.Dining, Icons.Filled.Category, Icons.Outlined.Add)
-
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-        contentColor = MaterialTheme.colorScheme.primary,
-        tonalElevation = 8.dp
-    ) {
-        items.forEachIndexed { index, item ->
-            NavigationBarItem(
-                icon = { Icon(icons[index], contentDescription = item) },
-                label = { Text(item, style = MaterialTheme.typography.labelMedium) },
-                selected = selectedItem == index,
-                onClick = { selectedItem = index },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unselectedIconColor = MaterialTheme.colorScheme.secondary,
-                    selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unselectedTextColor = MaterialTheme.colorScheme.secondary,
-                    indicatorColor = MaterialTheme.colorScheme.primaryFixed
-                )
-            )
-        }
     }
 }

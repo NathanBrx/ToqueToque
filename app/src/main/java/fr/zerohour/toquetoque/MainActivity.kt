@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import fr.zerohour.toquetoque.feature.home.HomeScreen
+import fr.zerohour.toquetoque.ui.navigation.MainScreen
 import fr.zerohour.toquetoque.ui.theme.ToqueToqueTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ToqueToqueTheme {
-                HomeScreen()
+                MainScreen()
             }
         }
     }
