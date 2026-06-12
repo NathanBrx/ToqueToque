@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,13 +47,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import fr.zerohour.toquetoque.R
+import fr.zerohour.toquetoque.data.local.*
+import kotlinx.coroutines.coroutineScope
 import java.util.UUID
 
 data class IngredientInput(
     val id: String = UUID.randomUUID().toString(),
-    var quantity: String = "",
-    var unit: String = "",
-    var name: String = ""
+    val quantity: String = "",
+    val unit: String = "",
+    val name: String = ""
 )
 
 class IngredientGroup {
@@ -466,7 +469,7 @@ fun AddRecipeScreen() {
                                     key(ingredient.id) {
                                         var isDragging by remember { mutableStateOf(false) }
                                         var dragOffsetY by remember { mutableFloatStateOf(0f) }
-                                        val itemHeightPx = with(LocalDensity.current) { 100.dp.toPx() }
+                                        var itemHeightPx by remember { mutableFloatStateOf(0f) }
 
                                         val elevation by animateDpAsState(if (isDragging) 8.dp else 0.dp, label = "elevation")
                                         val scale by animateFloatAsState(if (isDragging) 1.02f else 1f, label = "scale")
@@ -485,6 +488,9 @@ fun AddRecipeScreen() {
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth()
+                                                .onGloballyPositioned { coordinates ->
+                                                    itemHeightPx = coordinates.size.height.toFloat()
+                                                }
                                                 .zIndex(if (isDragging) 1f else 0f)
                                                 .graphicsLayer {
                                                     translationY = dragOffsetY
@@ -525,12 +531,14 @@ fun AddRecipeScreen() {
                                                                 val liveIndex = group.ingredients.indexOfFirst { it.id == ingredient.id }
                                                                 if (liveIndex == -1) return@detectDragGesturesAfterLongPress
 
-                                                                if (dragOffsetY > itemHeightPx && liveIndex < group.ingredients.size - 1) {
+                                                                val swapThreshold = itemHeightPx * 0.5f
+
+                                                                if (dragOffsetY > swapThreshold && liveIndex < group.ingredients.size - 1) {
                                                                     val temp = group.ingredients[liveIndex]
                                                                     group.ingredients[liveIndex] = group.ingredients[liveIndex + 1]
                                                                     group.ingredients[liveIndex + 1] = temp
                                                                     dragOffsetY -= itemHeightPx
-                                                                } else if (dragOffsetY < -itemHeightPx && liveIndex > 0) {
+                                                                } else if (dragOffsetY < -swapThreshold && liveIndex > 0) {
                                                                     val temp = group.ingredients[liveIndex]
                                                                     group.ingredients[liveIndex] = group.ingredients[liveIndex - 1]
                                                                     group.ingredients[liveIndex - 1] = temp
@@ -574,7 +582,7 @@ fun AddRecipeScreen() {
 
                                             // --- bouton supprimer ingrédient ---
                                             IconButton(
-                                                onClick = { group.ingredients.removeAt(index) },
+                                                onClick = { group.ingredients.removeAt(group.ingredients.indexOfFirst { it.id == ingredient.id }) },
                                                 modifier = Modifier.padding(top = 4.dp)
                                             ) {
                                                 Icon(
@@ -754,7 +762,7 @@ fun AddRecipeScreen() {
 
             // --- bouton sauvegarder ---
             Button(
-                onClick = { /* TODO : save recipe */ },
+                onClick = { /* TODO : save to db */},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
