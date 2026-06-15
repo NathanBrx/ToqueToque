@@ -85,7 +85,11 @@ fun MainScreen() {
             }
 
             composable(Screen.Add.route) {
-                AddRecipeScreen()
+                AddRecipeScreen(
+                    onSaveSuccess = {
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }

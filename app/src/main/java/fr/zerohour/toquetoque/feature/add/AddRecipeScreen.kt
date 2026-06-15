@@ -36,7 +36,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,10 +44,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import fr.zerohour.toquetoque.R
 import fr.zerohour.toquetoque.data.local.*
-import kotlinx.coroutines.coroutineScope
 import java.util.UUID
 
 data class IngredientInput(
@@ -82,7 +81,7 @@ data class OptionalTimeConfig(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun AddRecipeScreen() {
+fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecipeViewModel.Factory), onSaveSuccess: () -> Unit) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var prepTime by remember { mutableStateOf("") }
@@ -762,7 +761,14 @@ fun AddRecipeScreen() {
 
             // --- bouton sauvegarder ---
             Button(
-                onClick = { /* TODO : save to db */},
+                onClick = {
+                    viewModel.saveRecipeToDatabase(
+                        title, description, prepTime, servings, cookTime,
+                        coolingTime, freezingTime, selectedType,
+                        ingredientGroups, instructionGroups
+                    )
+                    onSaveSuccess()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),

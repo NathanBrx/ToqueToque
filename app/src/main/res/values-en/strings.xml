@@ -28,4 +28,7 @@
     <string name="requires_cooking">Cooking</string>
     <string name="requires_cooling">Cooling</string>
     <string name="requires_freezing">Freezing</string>
+    <string name="saved_recipes">Your saved recipes</string>
 </resources>
+
+\ No newline at end of file
