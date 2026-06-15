@@ -3,7 +3,9 @@ package fr.zerohour.toquetoque.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipeDao {
@@ -39,4 +41,7 @@ interface RecipeDao {
         if (ingredients.isNotEmpty()) insertIngredients(ingredients)
         if (steps.isNotEmpty()) insertInstructionSteps(steps)
     }
+
+    @Query("SELECT * FROM recipes WHERE selectedTag = :tag")
+    fun getRecipesByTag(tag: String): Flow<List<RecipeEntity>>
 }

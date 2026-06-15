@@ -27,7 +27,7 @@
     <string name="requires_cooking">Cuisson</string>
     <string name="requires_cooling">Réfrigération</string>
     <string name="requires_freezing">Congélation</string>
+    <string name="no_recipe_here">Aucune recette ici !</string>
+    <string name="add_a_recipe">Ajoutez-en une depuis l\'onglet \'+\'</string>
     <string name="saved_recipes">Vos recettes enregistrées</string>
 </resources>
-
-\ No newline at end of file

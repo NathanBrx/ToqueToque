@@ -1,6 +1,7 @@
 package fr.zerohour.toquetoque.feature.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -14,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -22,7 +24,7 @@ import fr.zerohour.toquetoque.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onCategoryClick: (String) -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -94,7 +96,7 @@ fun HomeScreen() {
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Vos recettes enregistrées",
+                text = stringResource(R.string.saved_recipes),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -104,15 +106,30 @@ fun HomeScreen() {
             Row(modifier = Modifier.fillMaxWidth().height(260.dp)) {
                 // Left Column
                 Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
-                    CategoryCard(title = "Entrées", modifier = Modifier.weight(1f), placeholderColor = Color(0xFFCFD8DC))
+                    CategoryCard(
+                        title = stringResource(R.string.starters),
+                        modifier = Modifier.weight(1f),
+                        placeholderColor = Color(0xFFCFD8DC),
+                        onClick = { onCategoryClick("Entrées") }
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
-                    CategoryCard(title = "Desserts", modifier = Modifier.weight(1f), placeholderColor = Color(0xFFB0BEC5))
+                    CategoryCard(
+                        title = "Desserts",
+                        modifier = Modifier.weight(1f),
+                        placeholderColor = Color(0xFFB0BEC5),
+                        onClick = { onCategoryClick("Desserts") }
+                    )
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
 
                 // Right Column
-                CategoryCard(title = "Plats", modifier = Modifier.weight(1f).fillMaxHeight(), placeholderColor = Color(0xFF90A4AE))
+                CategoryCard(
+                    title = stringResource(R.string.main_courses),
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    placeholderColor = Color(0xFF90A4AE),
+                    onClick = { onCategoryClick("Plats") }
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -129,14 +146,16 @@ fun CategoryCard(
     title: String,
     modifier: Modifier = Modifier,
     height: Dp = Dp.Unspecified,
-    placeholderColor: Color
+    placeholderColor: Color,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = modifier
             .then(if (height != Dp.Unspecified) Modifier.height(height) else Modifier)
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.large)
-            .background(placeholderColor),    // TODO: Replace with Coil AsyncImage
+            .background(placeholderColor)
+            .clickable{ onClick() },
         contentAlignment = Alignment.BottomStart
     ) {
         // Gradient

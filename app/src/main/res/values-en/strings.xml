@@ -28,7 +28,7 @@
     <string name="requires_cooking">Cooking</string>
     <string name="requires_cooling">Cooling</string>
     <string name="requires_freezing">Freezing</string>
+    <string name="no_recipe_here">No recipe here !</string>
+    <string name="add_a_recipe">Add one by clicking on the \'+\' tab</string>
     <string name="saved_recipes">Your saved recipes</string>
 </resources>
-
-\ No newline at end of file

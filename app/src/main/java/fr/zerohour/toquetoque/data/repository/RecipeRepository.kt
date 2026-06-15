@@ -6,6 +6,7 @@ import fr.zerohour.toquetoque.data.local.InstructionGroupEntity
 import fr.zerohour.toquetoque.data.local.InstructionStepEntity
 import fr.zerohour.toquetoque.data.local.RecipeDao
 import fr.zerohour.toquetoque.data.local.RecipeEntity
+import kotlinx.coroutines.flow.Flow
 
 class RecipeRepository(private val recipeDao: RecipeDao) {
 
@@ -25,4 +26,7 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
         )
     }
 
+    fun getRecipesByTag(tag: String): Flow<List<RecipeEntity>> {
+        return recipeDao.getRecipesByTag(tag)
+    }
 }

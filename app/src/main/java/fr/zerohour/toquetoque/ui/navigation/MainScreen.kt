@@ -12,11 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import fr.zerohour.toquetoque.feature.add.AddRecipeScreen
+import fr.zerohour.toquetoque.feature.category.CategoryScreen
 import fr.zerohour.toquetoque.feature.home.HomeScreen
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
@@ -81,7 +84,21 @@ fun MainScreen() {
             }
 
             composable(Screen.Categories.route) {
-                HomeScreen()
+                HomeScreen(
+                    onCategoryClick = { categoryName -> navController.navigate("category/$categoryName")}
+                )
+            }
+
+            composable(
+                route = "category/{categoryName}",
+                arguments = listOf(navArgument("categoryName") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val categoryName = backStackEntry.arguments?.getString("categoryName") ?: ""
+
+                CategoryScreen(
+                    categoryName = categoryName,
+                    onBackClick = { navController.popBackStack() }
+                )
             }
 
             composable(Screen.Add.route) {
