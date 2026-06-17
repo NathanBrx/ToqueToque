@@ -1,5 +1,6 @@
 package fr.zerohour.toquetoque.data.repository
 
+import fr.zerohour.toquetoque.data.local.FullRecipe
 import fr.zerohour.toquetoque.data.local.IngredientEntity
 import fr.zerohour.toquetoque.data.local.IngredientGroupEntity
 import fr.zerohour.toquetoque.data.local.InstructionGroupEntity
@@ -28,5 +29,9 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
 
     fun getRecipesByTag(tag: String): Flow<List<RecipeEntity>> {
         return recipeDao.getRecipesByTag(tag)
+    }
+
+    fun getFullRecipeById(id: String): Flow<FullRecipe?> {
+        return recipeDao.getFullRecipeById(id)
     }
 }

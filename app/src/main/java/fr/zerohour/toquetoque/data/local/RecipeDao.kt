@@ -44,4 +44,8 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes WHERE selectedTag = :tag")
     fun getRecipesByTag(tag: String): Flow<List<RecipeEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM recipes WHERE id = :recipeId")
+    fun getFullRecipeById(recipeId: String): Flow<FullRecipe?>
 }

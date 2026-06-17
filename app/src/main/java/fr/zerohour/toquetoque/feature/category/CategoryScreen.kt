@@ -1,6 +1,7 @@
 package fr.zerohour.toquetoque.feature.category
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +23,7 @@ import fr.zerohour.toquetoque.R
 fun CategoryScreen(
     categoryName: String,
     onBackClick: () -> Unit,
+    onRecipeClick: () -> Unit,
     viewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory)
 ) {
     LaunchedEffect(categoryName) {
@@ -66,7 +68,8 @@ fun CategoryScreen(
                     RecipeListItem(
                         title = recipe.title,
                         description = recipe.description,
-                        prepTime = recipe.prepTime
+                        prepTime = recipe.prepTime,
+                        onClick = { onRecipeClick(recipe.id) }
                     )
                 }
             }
@@ -75,10 +78,10 @@ fun CategoryScreen(
 }
 
 @Composable
-fun RecipeListItem(title: String, description: String, prepTime: String) {
+fun RecipeListItem(title: String, description: String, prepTime: String, onClick: (String) -> Unit) {
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest)
+        modifier = Modifier.fillMaxWidth().clickable{ onClick() },
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
             Box(
