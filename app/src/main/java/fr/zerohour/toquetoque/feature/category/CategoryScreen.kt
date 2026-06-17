@@ -40,7 +40,10 @@ fun CategoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = categoryName, fontWeight = FontWeight.Bold) },
+                title = {
+                    val displayTitle = if (categoryName == "Divers") stringResource(R.string.other_types) else categoryName
+                    Text(text = displayTitle, fontWeight = FontWeight.Bold)
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -103,10 +106,10 @@ fun RecipeListItem(title: String, description: String, prepTime: String, photoUr
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = title.ifEmpty { "Recette sans nom" }, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(text = title.ifEmpty { stringResource(R.string.unnamed_recipe) }, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = description.ifEmpty { "Pas de description" },
+                    text = description.ifEmpty { stringResource(R.string.no_description) },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,

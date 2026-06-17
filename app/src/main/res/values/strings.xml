@@ -31,4 +31,7 @@
     <string name="add_a_recipe">Ajoutez-en une depuis l\'onglet \'+\'</string>
     <string name="saved_recipes">Vos recettes enregistrées</string>
     <string name="serves_x_people">Pour %1$s personnes</string>
+    <string name="other_types">Divers</string>
+    <string name="unnamed_recipe">Recette sans nom</string>
+    <string name="no_description">Pas de description</string>
 </resources>

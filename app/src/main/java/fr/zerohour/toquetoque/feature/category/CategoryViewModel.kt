@@ -21,7 +21,8 @@ class CategoryViewModel(
 
     fun loadRecipes(category: String) {
         viewModelScope.launch {
-            repository.getFullRecipesByTag(category).collect { recipeList ->
+            val databaseTag = if (category == "Divers") "" else category
+            repository.getFullRecipesByTag(databaseTag).collect { recipeList ->
                 _recipes.value = recipeList
             }
         }

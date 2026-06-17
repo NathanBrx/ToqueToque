@@ -32,4 +32,7 @@
     <string name="add_a_recipe">Add one by clicking on the \'+\' tab</string>
     <string name="saved_recipes">Your saved recipes</string>
     <string name="serves_x_people">Serves %1$s</string>
+    <string name="other_types">Other</string>
+    <string name="unnamed_recipe">Unnamed recipe</string>
+    <string name="no_description">Description empty</string>
 </resources>
