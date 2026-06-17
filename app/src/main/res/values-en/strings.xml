@@ -31,4 +31,6 @@
     <string name="no_recipe_here">No recipe here !</string>
     <string name="add_a_recipe">Add one by clicking on the \'+\' tab</string>
     <string name="saved_recipes">Your saved recipes</string>
+    <string name="serves_x_people">Serves %1$s</string>
+    <string name="step_x">Step %1$s</string>
 </resources>

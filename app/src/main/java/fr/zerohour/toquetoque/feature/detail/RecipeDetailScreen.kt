@@ -14,17 +14,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
-
-val SavoryGreen = Color(0xFF10B981)
+import fr.zerohour.toquetoque.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,13 +42,40 @@ fun RecipeDetailScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Savory", style = MaterialTheme.typography.titleLarge, color = SavoryGreen, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = SavoryGreen)
+                title = {
+                    Row() {
+                        Text (
+                            text = "Toque",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_toque_logo),
+                            contentDescription = "Toque Toque Logo",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.height(30.dp)
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Text (
+                            text = "Toque",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = Color.Unspecified,
+                    navigationIconContentColor = Color.Unspecified,
+                    titleContentColor = Color.Unspecified,
+                    actionIconContentColor = Color.Unspecified
+                )
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -56,7 +83,7 @@ fun RecipeDetailScreen(
 
         if (fullRecipe == null) {
             Box(modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = SavoryGreen)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
             return@Scaffold
         }
@@ -67,21 +94,41 @@ fun RecipeDetailScreen(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
             contentPadding = PaddingValues(bottom = 32.dp)
         ) {
+            // --- photos ---
             item {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    AsyncImage(
-                        model = "https://images.unsplash.com/photo-1519915028121-7d3463d20b13?q=80&w=1000&auto=format&fit=crop", // TODO: Add photo URI to your RecipeEntity later!
-                        contentDescription = recipe.title,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxWidth().height(280.dp).padding(horizontal = 16.dp).clip(RoundedCornerShape(16.dp))
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(280.dp)
+                            .padding(horizontal = 16.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                        MaterialTheme.colorScheme.primary
+                                    )
+                                )
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.RestaurantMenu,
+                            contentDescription = null,
+                            modifier = Modifier.size(72.dp),
+                            tint = Color.White.copy(alpha = 0.6f)
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(SavoryGreen))
+                        Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary))
                     }
                 }
             }
 
+            // --- titre, description, portions
             item {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 24.dp),
@@ -90,25 +137,38 @@ fun RecipeDetailScreen(
                     Text(text = recipe.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (recipe.prepTime.isNotEmpty()) InfoChip(Icons.Outlined.Timer, "${recipe.prepTime} min")
-                        InfoChip(Icons.Outlined.LocalDining, recipe.selectedTag) // E.g., "Desserts"
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        if (recipe.prepTime.isNotEmpty()) {
+                            InfoChip(Icons.Outlined.Timer, "${recipe.prepTime} min")
+                        }
+                        if (recipe.cookTime.isNotEmpty()) {
+                            InfoChip(Icons.Outlined.LocalFireDepartment, "${recipe.cookTime} min")
+                        }
+                        if (recipe.coolingTime.isNotEmpty()) {
+                            InfoChip(Icons.Outlined.Kitchen, "${recipe.coolingTime} min")
+                        }
+                        if (recipe.freezingTime.isNotEmpty()) {
+                            InfoChip(Icons.Outlined.AcUnit, "${recipe.freezingTime} min")
+                        }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    if (recipe.servings.isNotEmpty()) InfoChip(Icons.Outlined.RestaurantMenu, "Serves ${recipe.servings}")
+                    if (recipe.servings.isNotEmpty()) InfoChip(Icons.Outlined.RestaurantMenu, stringResource(id = R.string.serves_x_people, recipe.servings))
 
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = recipe.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, lineHeight = 22.sp)
                 }
             }
 
+            // --- ingrédients ---
             item {
                 if (fullRecipe!!.ingredientGroups.isNotEmpty()) {
-                    SectionHeader(icon = Icons.Outlined.Inventory2, title = "Ingredients")
+                    SectionHeader(icon = Icons.Outlined.Inventory2, title = stringResource(R.string.ingredients))
                     Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
                         fullRecipe!!.ingredientGroups.forEach { groupData ->
-                            // Format the ingredients into a clean list of strings
                             val formattedIngredients = groupData.ingredients.map { ing ->
                                 "${ing.quantity} ${ing.unit} ${ing.name}".trim()
                             }
@@ -123,24 +183,42 @@ fun RecipeDetailScreen(
                 }
             }
 
+            // --- étapes de préparation ---
             item {
                 if (fullRecipe!!.instructionGroups.isNotEmpty()) {
-                    SectionHeader(icon = Icons.Outlined.Restaurant, title = "Preparation")
-                    Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    SectionHeader(icon = Icons.Outlined.Restaurant, title = "Instructions")
+
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(32.dp)
+                    ) {
 
                         fullRecipe!!.instructionGroups.forEach { groupData ->
-                            // Sort steps just in case DB returns them out of order
-                            val sortedSteps = groupData.steps.sortedBy { it.stepIndex }
+                            Column {
+                                if (groupData.group.title.isNotEmpty()) {
+                                    Text(
+                                        text = groupData.group.title.uppercase(),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        letterSpacing = 1.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(bottom = 12.dp, start = 8.dp)
+                                    )
+                                }
 
-                            sortedSteps.forEachIndexed { index, step ->
-                                // Format index as "01", "02", etc.
-                                val stepNum = (index + 1).toString().padStart(2, '0')
+                                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                                    val sortedSteps = groupData.steps.sortedBy { it.stepIndex }
 
-                                PreparationStepCard(
-                                    stepNumber = stepNum,
-                                    title = if (index == 0) groupData.group.title else "Étape ${index + 1}",
-                                    description = step.text
-                                )
+                                    sortedSteps.forEachIndexed { index, step ->
+                                        val stepNum = (index + 1).toString().padStart(2, '0')
+
+                                        PreparationStepCard(
+                                            stepNumber = stepNum,
+                                            title = stringResource(R.string.step_x, index + 1),
+                                            description = step.text
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -177,7 +255,7 @@ fun SectionHeader(icon: ImageVector, title: String) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = SavoryGreen, modifier = Modifier.size(20.dp))
+        Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
@@ -198,7 +276,7 @@ fun IngredientGroupCard(title: String, ingredients: List<String>) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.outline,
                 letterSpacing = 1.sp,
                 fontWeight = FontWeight.Bold
@@ -244,7 +322,7 @@ fun PreparationStepCard(stepNumber: String, title: String, description: String) 
                     .fillMaxHeight()
                     .padding(vertical = 12.dp) // Ensures the line doesn't hit the very edges
                     .clip(RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp))
-                    .background(SavoryGreen)
+                    .background(MaterialTheme.colorScheme.primary)
             )
 
             Column(modifier = Modifier.padding(20.dp)) {
@@ -252,7 +330,7 @@ fun PreparationStepCard(stepNumber: String, title: String, description: String) 
                     text = stepNumber,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = SavoryGreen
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(

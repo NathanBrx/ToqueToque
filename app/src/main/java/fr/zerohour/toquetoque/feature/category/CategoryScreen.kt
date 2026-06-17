@@ -23,7 +23,7 @@ import fr.zerohour.toquetoque.R
 fun CategoryScreen(
     categoryName: String,
     onBackClick: () -> Unit,
-    onRecipeClick: () -> Unit,
+    onRecipeClick: (String) -> Unit,
     viewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory)
 ) {
     LaunchedEffect(categoryName) {
@@ -78,7 +78,7 @@ fun CategoryScreen(
 }
 
 @Composable
-fun RecipeListItem(title: String, description: String, prepTime: String, onClick: (String) -> Unit) {
+fun RecipeListItem(title: String, description: String, prepTime: String, onClick: () -> Unit) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth().clickable{ onClick() },
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),

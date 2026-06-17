@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import fr.zerohour.toquetoque.feature.add.AddRecipeScreen
 import fr.zerohour.toquetoque.feature.category.CategoryScreen
+import fr.zerohour.toquetoque.feature.detail.RecipeDetailScreen
 import fr.zerohour.toquetoque.feature.home.HomeScreen
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
@@ -97,6 +98,20 @@ fun MainScreen() {
 
                 CategoryScreen(
                     categoryName = categoryName,
+                    onBackClick = { navController.popBackStack() },
+                    onRecipeClick = { recipeId ->
+                        navController.navigate("recipe_detail/$recipeId")
+                    }
+                )
+            }
+
+            composable(
+                route = "recipe_detail/{recipeId}",
+                arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val recipeId = backStackEntry.arguments?.getString("recipeId") ?: ""
+                RecipeDetailScreen(
+                    recipeId = recipeId,
                     onBackClick = { navController.popBackStack() }
                 )
             }

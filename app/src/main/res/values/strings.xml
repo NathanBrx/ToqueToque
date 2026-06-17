@@ -30,4 +30,6 @@
     <string name="no_recipe_here">Aucune recette ici !</string>
     <string name="add_a_recipe">Ajoutez-en une depuis l\'onglet \'+\'</string>
     <string name="saved_recipes">Vos recettes enregistrées</string>
+    <string name="serves_x_people">Pour %1$s personnes</string>
+    <string name="step_x">Étape %1$s</string>
 </resources>
