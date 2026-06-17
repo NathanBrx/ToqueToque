@@ -37,4 +37,8 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
     fun getFullRecipeById(id: String): Flow<FullRecipe?> {
         return recipeDao.getFullRecipeById(id)
     }
+
+    suspend fun deleteRecipeById(id: String) {
+        recipeDao.deleteRecipeById(id)
+    }
 }

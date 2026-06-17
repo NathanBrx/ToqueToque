@@ -55,4 +55,7 @@ interface RecipeDao {
     @Transaction
     @Query("SELECT * FROM recipes WHERE id = :recipeId")
     fun getFullRecipeById(recipeId: String): Flow<FullRecipe?>
+
+    @Query("DELETE FROM recipes WHERE id = :recipeId")
+    suspend fun deleteRecipeById(recipeId: String)
 }

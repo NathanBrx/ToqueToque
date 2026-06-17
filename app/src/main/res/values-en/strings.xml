@@ -35,4 +35,8 @@
     <string name="other_types">Other</string>
     <string name="unnamed_recipe">Unnamed recipe</string>
     <string name="no_description">Description empty</string>
+    <string name="delete_recipe">Delete this recipe ?</string>
+    <string name="delete_recipe_confirm">This action cannot be undone. All photos and instructions will be lost.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

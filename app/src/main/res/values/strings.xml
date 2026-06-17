@@ -34,4 +34,8 @@
     <string name="other_types">Divers</string>
     <string name="unnamed_recipe">Recette sans nom</string>
     <string name="no_description">Pas de description</string>
+    <string name="delete_recipe">Supprimer la recette ?</string>
+    <string name="delete_recipe_confirm">Cette action est irréversible. Toutes les photos et instructions seront perdues.</string>
+    <string name="delete">Supprimer</string>
+    <string name="cancel">Annuler</string>
 </resources>

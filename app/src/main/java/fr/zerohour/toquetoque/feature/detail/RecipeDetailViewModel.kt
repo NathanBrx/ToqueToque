@@ -26,6 +26,13 @@ class RecipeDetailViewModel(
         }
     }
 
+    fun deleteRecipe(recipeId: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            repository.deleteRecipeById(recipeId)
+            onSuccess()
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
