@@ -190,7 +190,9 @@ fun RecipeDetailScreen(
 
                         fullRecipe!!.ingredientGroups.forEach { groupData ->
                             val formattedIngredients = groupData.ingredients.map { ing ->
-                                "${ing.quantity} ${ing.unit} ${ing.name}".trim()
+                                listOf(ing.quantity, ing.unit, ing.name)
+                                    .filter { it.isNotBlank() }
+                                    .joinToString(" ")
                             }
 
                             IngredientGroupCard(
@@ -234,7 +236,6 @@ fun RecipeDetailScreen(
 
                                         PreparationStepCard(
                                             stepNumber = stepNum,
-                                            title = stringResource(R.string.step_x, index + 1),
                                             description = step.text
                                         )
                                     }
@@ -278,7 +279,7 @@ fun SectionHeader(icon: ImageVector, title: String) {
         Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -297,7 +298,7 @@ fun IngredientGroupCard(title: String, ingredients: List<String>) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.outline,
+                color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 1.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -327,7 +328,7 @@ fun IngredientGroupCard(title: String, ingredients: List<String>) {
 }
 
 @Composable
-fun PreparationStepCard(stepNumber: String, title: String, description: String) {
+fun PreparationStepCard(stepNumber: String, description: String) {
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
@@ -350,13 +351,6 @@ fun PreparationStepCard(stepNumber: String, title: String, description: String) 
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
