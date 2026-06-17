@@ -9,7 +9,8 @@ import androidx.room.RoomDatabase
         IngredientGroupEntity::class,
         IngredientEntity::class,
         InstructionGroupEntity::class,
-        InstructionStepEntity::class
+        InstructionStepEntity::class,
+        RecipePhotoEntity::class
     ],
     version = 1,
     exportSchema = false

@@ -6,15 +6,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 
 import fr.zerohour.toquetoque.R
 
@@ -51,7 +56,7 @@ fun CategoryScreen(
             Column(
                 modifier = Modifier.fillMaxSize().padding(innerPadding),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = stringResource(R.string.no_recipe_here), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(text = stringResource(R.string.add_a_recipe), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.outline)
@@ -64,12 +69,15 @@ fun CategoryScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(recipes, key = { it.id }) { recipe ->
+                items(recipes, key = { it.recipe.id }) { recipe ->
+                    val baseRecipe = recipe.recipe
+                    val firstPhotoUri = recipe.photos.firstOrNull()?.photoUri
                     RecipeListItem(
-                        title = recipe.title,
-                        description = recipe.description,
-                        prepTime = recipe.prepTime,
-                        onClick = { onRecipeClick(recipe.id) }
+                        title = baseRecipe.title,
+                        description = baseRecipe.description,
+                        prepTime = baseRecipe.prepTime,
+                        photoUri = firstPhotoUri,
+                        onClick = { onRecipeClick(baseRecipe.id) }
                     )
                 }
             }
@@ -78,16 +86,20 @@ fun CategoryScreen(
 }
 
 @Composable
-fun RecipeListItem(title: String, description: String, prepTime: String, onClick: () -> Unit) {
+fun RecipeListItem(title: String, description: String, prepTime: String, photoUri: String?, onClick: () -> Unit) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth().clickable{ onClick() },
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
-            Box(
+            AsyncImage(
+                model = photoUri,
+                contentDescription = title,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -101,7 +113,13 @@ fun RecipeListItem(title: String, description: String, prepTime: String, onClick
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "⏱️ $prepTime min", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Icon(imageVector = Icons.Outlined.Timer, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
+                    Text(text = "$prepTime min", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                }
             }
         }
     }

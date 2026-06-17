@@ -24,7 +24,8 @@ class AddRecipeViewModel(
         freezingTime: String,
         selectedType: String,
         ingredientGroupsUi: List<IngredientGroup>,
-        instructionGroupsUi: List<InstructionGroup>
+        instructionGroupsUi: List<InstructionGroup>,
+        photoUris: List<String>
     ) {
         viewModelScope.launch {
             val recipeId = UUID.randomUUID().toString()
@@ -68,8 +69,13 @@ class AddRecipeViewModel(
                 }
             }
 
+            // --- photos ---
+            val photoEntities = photoUris.map { uriString ->
+                RecipePhotoEntity(id = UUID.randomUUID().toString(), recipeId = recipeId, photoUri = uriString)
+            }
+
             repository.saveRecipe(
-                recipeEntity, ingGroupEntities, ingEntities, instGroupEntities, instStepEntities
+                recipeEntity, ingGroupEntities, ingEntities, instGroupEntities, instStepEntities, photoEntities
             )
         }
     }

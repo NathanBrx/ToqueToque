@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import fr.zerohour.toquetoque.ToqueToqueApp
+import fr.zerohour.toquetoque.data.local.FullRecipe
 import fr.zerohour.toquetoque.data.local.RecipeEntity
 import fr.zerohour.toquetoque.data.repository.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +16,12 @@ class CategoryViewModel(
     private val repository: RecipeRepository
 ) : ViewModel() {
 
-    private val _recipes = MutableStateFlow<List<RecipeEntity>>(emptyList())
+    private val _recipes = MutableStateFlow<List<FullRecipe>>(emptyList())
     val recipes = _recipes.asStateFlow()
 
     fun loadRecipes(category: String) {
         viewModelScope.launch {
-            repository.getRecipesByTag(category).collect { recipeList ->
+            repository.getFullRecipesByTag(category).collect { recipeList ->
                 _recipes.value = recipeList
             }
         }

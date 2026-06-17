@@ -25,13 +25,17 @@ interface RecipeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertInstructionSteps(steps: List<InstructionStepEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecipePhotos(photos: List<RecipePhotoEntity>)
+
     @Transaction
     suspend fun saveFullRecipe(
         recipe: RecipeEntity,
         ingGroups: List<IngredientGroupEntity>,
         ingredients: List<IngredientEntity>,
         insGroups: List<InstructionGroupEntity>,
-        steps: List<InstructionStepEntity>
+        steps: List<InstructionStepEntity>,
+        photos: List<RecipePhotoEntity>
     ) {
         insertRecipe(recipe)
 
@@ -40,10 +44,13 @@ interface RecipeDao {
 
         if (ingredients.isNotEmpty()) insertIngredients(ingredients)
         if (steps.isNotEmpty()) insertInstructionSteps(steps)
+
+        if (photos.isNotEmpty()) insertRecipePhotos(photos)
     }
 
+    @Transaction
     @Query("SELECT * FROM recipes WHERE selectedTag = :tag")
-    fun getRecipesByTag(tag: String): Flow<List<RecipeEntity>>
+    fun getFullRecipesByTag(tag: String): Flow<List<FullRecipe>>
 
     @Transaction
     @Query("SELECT * FROM recipes WHERE id = :recipeId")

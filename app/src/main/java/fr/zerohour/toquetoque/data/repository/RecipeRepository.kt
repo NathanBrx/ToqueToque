@@ -7,6 +7,7 @@ import fr.zerohour.toquetoque.data.local.InstructionGroupEntity
 import fr.zerohour.toquetoque.data.local.InstructionStepEntity
 import fr.zerohour.toquetoque.data.local.RecipeDao
 import fr.zerohour.toquetoque.data.local.RecipeEntity
+import fr.zerohour.toquetoque.data.local.RecipePhotoEntity
 import kotlinx.coroutines.flow.Flow
 
 class RecipeRepository(private val recipeDao: RecipeDao) {
@@ -16,19 +17,21 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
         ingredientGroups: List<IngredientGroupEntity>,
         ingredients: List<IngredientEntity>,
         instructionGroups: List<InstructionGroupEntity>,
-        instructionSteps: List<InstructionStepEntity>
+        instructionSteps: List<InstructionStepEntity>,
+        photos: List<RecipePhotoEntity>
     ) {
         recipeDao.saveFullRecipe(
             recipe,
             ingredientGroups,
             ingredients,
             instructionGroups,
-            instructionSteps
+            instructionSteps,
+            photos
         )
     }
 
-    fun getRecipesByTag(tag: String): Flow<List<RecipeEntity>> {
-        return recipeDao.getRecipesByTag(tag)
+    fun getFullRecipesByTag(tag: String): Flow<List<FullRecipe>> {
+        return recipeDao.getFullRecipesByTag(tag)
     }
 
     fun getFullRecipeById(id: String): Flow<FullRecipe?> {

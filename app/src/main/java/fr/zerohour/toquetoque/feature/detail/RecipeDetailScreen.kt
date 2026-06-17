@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import fr.zerohour.toquetoque.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,6 +93,7 @@ fun RecipeDetailScreen(
         }
 
         val recipe = fullRecipe!!.recipe
+        val photos = fullRecipe!!.photos
 
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
@@ -97,33 +102,48 @@ fun RecipeDetailScreen(
             // --- photos ---
             item {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(280.dp)
-                            .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                                        MaterialTheme.colorScheme.primary
-                                    )
-                                )
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.RestaurantMenu,
-                            contentDescription = null,
-                            modifier = Modifier.size(72.dp),
-                            tint = Color.White.copy(alpha = 0.6f)
-                        )
-                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary))
+                    if (photos.isNotEmpty()) {
+                        val pagerState = rememberPagerState(pageCount = { photos.size })
+
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(280.dp)
+                        ) { page ->
+                            AsyncImage(
+                                model = photos[page].photoUri,
+                                contentDescription = "${recipe.title} image ${page + 1}",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .padding(horizontal = 16.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            repeat(photos.size) { iteration ->
+                                val dotColor = if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else Color.LightGray
+                                Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(dotColor))
+                            }
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(280.dp)
+                                .padding(horizontal = 16.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary.copy(0.5f), MaterialTheme.colorScheme.primary))),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Outlined.RestaurantMenu, contentDescription = null, modifier = Modifier.size(72.dp), tint = Color.White.copy(0.6f))
+                        }
                     }
                 }
             }
@@ -315,12 +335,11 @@ fun PreparationStepCard(stepNumber: String, title: String, description: String) 
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-            // Left green indicator bar
             Box(
                 modifier = Modifier
                     .width(3.dp)
                     .fillMaxHeight()
-                    .padding(vertical = 12.dp) // Ensures the line doesn't hit the very edges
+                    .padding(vertical = 12.dp)
                     .clip(RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp))
                     .background(MaterialTheme.colorScheme.primary)
             )

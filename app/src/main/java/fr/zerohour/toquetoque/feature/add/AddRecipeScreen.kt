@@ -1,5 +1,6 @@
 package fr.zerohour.toquetoque.feature.add
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -98,6 +100,10 @@ fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecip
     val ingredientGroups = remember { mutableStateListOf(IngredientGroup()) }
     val instructionGroups = remember { mutableStateListOf(InstructionGroup()) }
 
+    var selectedPhotoUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+
+    val context = LocalContext.current
+
     Scaffold(
         // top bar : logo + nom
         topBar = {
@@ -153,7 +159,6 @@ fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecip
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Photos", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
 
-                var selectedPhotoUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
                 val maxPhotos = 5
 
                 // --- photo picker ---
@@ -762,10 +767,23 @@ fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecip
             // --- bouton sauvegarder ---
             Button(
                 onClick = {
+                    selectedPhotoUris.forEach { uri ->
+                        try {
+                            context.contentResolver.takePersistableUriPermission(
+                                uri,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    val uriStrings = selectedPhotoUris.map { it.toString() }
+
                     viewModel.saveRecipeToDatabase(
                         title, description, prepTime, servings, cookTime,
                         coolingTime, freezingTime, selectedType,
-                        ingredientGroups, instructionGroups
+                        ingredientGroups, instructionGroups, uriStrings
                     )
                     onSaveSuccess()
                 },

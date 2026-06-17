@@ -36,5 +36,12 @@ data class FullRecipe(
         parentColumn = "id",
         entityColumn = "recipeId"
     )
-    val instructionGroups: List<InstructionGroupWithSteps>
+    val instructionGroups: List<InstructionGroupWithSteps>,
+
+    @Relation(
+        entity = RecipePhotoEntity::class,
+        parentColumn = "id",
+        entityColumn = "recipeId"
+    )
+    val photos: List<RecipePhotoEntity>
 )

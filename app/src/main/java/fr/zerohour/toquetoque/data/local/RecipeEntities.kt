@@ -87,3 +87,20 @@ data class InstructionStepEntity(
     val stepIndex: Int,
     val text: String
 )
+
+@Entity(
+    tableName = "recipe_photos",
+    foreignKeys = [
+        ForeignKey(
+            entity = RecipeEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["recipeId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class RecipePhotoEntity(
+    @PrimaryKey val id: String,
+    val recipeId: String,
+    val photoUri: String
+)
