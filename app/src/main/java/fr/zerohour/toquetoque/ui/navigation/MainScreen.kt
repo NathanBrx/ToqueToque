@@ -112,12 +112,27 @@ fun MainScreen() {
                 val recipeId = backStackEntry.arguments?.getString("recipeId") ?: ""
                 RecipeDetailScreen(
                     recipeId = recipeId,
-                    onBackClick = { navController.popBackStack() }
+                    onBackClick = { navController.popBackStack() },
+                    onEditClick = { idToEdit ->
+                        navController.navigate("add?recipeId=$idToEdit")
+                    }
                 )
             }
 
-            composable(Screen.Add.route) {
+            composable(
+                route = "add?recipeId={recipeId}",
+                arguments = listOf(
+                    navArgument("recipeId") {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    }
+                ),
+            ) { backStackEntry ->
+                val recipeIdToEdit = backStackEntry.arguments?.getString("recipeId")
+
                 AddRecipeScreen(
+                    recipeIdToEdit = recipeIdToEdit,
                     onSaveSuccess = {
                         navController.popBackStack()
                     }

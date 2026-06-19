@@ -38,7 +38,29 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
         return recipeDao.getFullRecipeById(id)
     }
 
+    suspend fun getFullRecipeByIdSync(id: String): FullRecipe? {
+        return recipeDao.getFullRecipeByIdSync(id)
+    }
+
     suspend fun deleteRecipeById(id: String) {
         recipeDao.deleteRecipeById(id)
+    }
+
+    suspend fun updateRecipe(
+        recipe: RecipeEntity,
+        ingGroups: List<IngredientGroupEntity>,
+        ingredients: List<IngredientEntity>,
+        insGroups: List<InstructionGroupEntity>,
+        steps: List<InstructionStepEntity>,
+        photos: List<RecipePhotoEntity>
+    ) {
+        recipeDao.updateFullRecipe(
+            recipe,
+            ingGroups,
+            ingredients,
+            insGroups,
+            steps,
+            photos
+        )
     }
 }

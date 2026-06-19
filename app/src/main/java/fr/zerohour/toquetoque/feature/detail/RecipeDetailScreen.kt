@@ -35,6 +35,7 @@ import fr.zerohour.toquetoque.R
 fun RecipeDetailScreen(
     recipeId: String,
     onBackClick: () -> Unit,
+    onEditClick: (String) -> Unit,
     viewModel: RecipeDetailViewModel = viewModel(factory = RecipeDetailViewModel.Factory)
 ) {
     LaunchedEffect(recipeId) {
@@ -75,6 +76,9 @@ fun RecipeDetailScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { onEditClick(recipeId) }) {
+                        Icon(Icons.Outlined.Edit, contentDescription = "Modifier", tint = MaterialTheme.colorScheme.primary)
+                    }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(Icons.Outlined.Delete, contentDescription = "Supprimer", tint = MaterialTheme.colorScheme.error)
                     }

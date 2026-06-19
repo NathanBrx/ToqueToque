@@ -14,7 +14,8 @@ class AddRecipeViewModel(
     private val repository: RecipeRepository
 ) : ViewModel() {
 
-    fun saveRecipeToDatabase(
+    fun saveOrUpdateRecipe(
+        recipeIdToEdit: String?,
         title: String,
         description: String,
         prepTime: String,
@@ -28,7 +29,8 @@ class AddRecipeViewModel(
         photoUris: List<String>
     ) {
         viewModelScope.launch {
-            val recipeId = UUID.randomUUID().toString()
+            val isUpdating = recipeIdToEdit != null
+            val recipeId = recipeIdToEdit ?: UUID.randomUUID().toString()
 
             val recipeEntity = RecipeEntity(
                 id = recipeId,
@@ -42,42 +44,55 @@ class AddRecipeViewModel(
                 selectedTag = selectedType
             )
 
-            // --- ingrédients ---
             val ingGroupEntities = mutableListOf<IngredientGroupEntity>()
             val ingEntities = mutableListOf<IngredientEntity>()
 
             ingredientGroupsUi.forEach { group ->
-                ingGroupEntities.add(IngredientGroupEntity(group.id, recipeId, group.title))
-                group.ingredients.forEach { ingredient ->
-                    ingEntities.add(
-                        IngredientEntity(ingredient.id, group.id, ingredient.quantity, ingredient.unit, ingredient.name)
-                    )
+                val validIngredients = group.ingredients.filter { it.name.isNotBlank() }
+
+                if (validIngredients.isNotEmpty() || group.title.isNotBlank()) {
+                    ingGroupEntities.add(IngredientGroupEntity(group.id, recipeId, group.title))
+
+                    validIngredients.forEach { ingredient ->
+                        ingEntities.add(
+                            IngredientEntity(ingredient.id, group.id, ingredient.quantity, ingredient.unit, ingredient.name)
+                        )
+                    }
                 }
             }
 
-            // --- instructions ---
             val instGroupEntities = mutableListOf<InstructionGroupEntity>()
             val instStepEntities = mutableListOf<InstructionStepEntity>()
 
             instructionGroupsUi.forEach { group ->
-                instGroupEntities.add(InstructionGroupEntity(group.id, recipeId, group.title))
-                group.steps.forEachIndexed { index, stepText ->
-                    val stepId = UUID.randomUUID().toString()
-                    instStepEntities.add(
-                        InstructionStepEntity(stepId, group.id, index, stepText)
-                    )
+                val validSteps = group.steps.filter { it.isNotBlank() }
+
+                if (validSteps.isNotEmpty() || group.title.isNotBlank()) {
+                    instGroupEntities.add(InstructionGroupEntity(group.id, recipeId, group.title))
+
+                    validSteps.forEachIndexed { index, stepText ->
+                        val stepId = UUID.randomUUID().toString()
+                        instStepEntities.add(
+                            InstructionStepEntity(stepId, group.id, index, stepText)
+                        )
+                    }
                 }
             }
 
-            // --- photos ---
             val photoEntities = photoUris.map { uriString ->
                 RecipePhotoEntity(id = UUID.randomUUID().toString(), recipeId = recipeId, photoUri = uriString)
             }
 
-            repository.saveRecipe(
-                recipeEntity, ingGroupEntities, ingEntities, instGroupEntities, instStepEntities, photoEntities
-            )
+            if (isUpdating) {
+                repository.updateRecipe(recipeEntity, ingGroupEntities, ingEntities, instGroupEntities, instStepEntities, photoEntities)
+            } else {
+                repository.saveRecipe(recipeEntity, ingGroupEntities, ingEntities, instGroupEntities, instStepEntities, photoEntities)
+            }
         }
+    }
+
+    suspend fun getRecipeById(id: String): FullRecipe? {
+        return repository.getFullRecipeByIdSync(id)
     }
 
     companion object {

@@ -38,4 +38,5 @@
     <string name="delete_recipe_confirm">Cette action est irréversible. Toutes les photos et instructions seront perdues.</string>
     <string name="delete">Supprimer</string>
     <string name="cancel">Annuler</string>
+    <string name="edit_recipe">Modifier la recette</string>
 </resources>

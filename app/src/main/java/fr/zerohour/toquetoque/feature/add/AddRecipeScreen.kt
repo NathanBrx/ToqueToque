@@ -51,6 +51,7 @@ import coil.compose.AsyncImage
 import fr.zerohour.toquetoque.R
 import fr.zerohour.toquetoque.data.local.*
 import java.util.UUID
+import androidx.core.net.toUri
 
 data class IngredientInput(
     val id: String = UUID.randomUUID().toString(),
@@ -83,7 +84,7 @@ data class OptionalTimeConfig(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecipeViewModel.Factory), onSaveSuccess: () -> Unit) {
+fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecipeViewModel.Factory), onSaveSuccess: () -> Unit, recipeIdToEdit: String? = null) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var prepTime by remember { mutableStateOf("") }
@@ -103,6 +104,61 @@ fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecip
     var selectedPhotoUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
     val context = LocalContext.current
+
+    LaunchedEffect(recipeIdToEdit) {
+        if (recipeIdToEdit != null) {
+            val existingRecipe = viewModel.getRecipeById(recipeIdToEdit)
+            if (existingRecipe != null) {
+                title = existingRecipe.recipe.title
+                description = existingRecipe.recipe.description
+                prepTime = existingRecipe.recipe.prepTime
+                cookTime = existingRecipe.recipe.cookTime
+                coolingTime = existingRecipe.recipe.coolingTime
+                freezingTime = existingRecipe.recipe.freezingTime
+                servings = existingRecipe.recipe.servings
+                selectedType = existingRecipe.recipe.selectedTag
+                hasCookTime = existingRecipe.recipe.cookTime.isNotBlank()
+                hasCoolingTime = existingRecipe.recipe.coolingTime.isNotBlank()
+                hasFreezingTime = existingRecipe.recipe.freezingTime.isNotBlank()
+
+                selectedPhotoUris = existingRecipe.photos.map { it.photoUri.toUri() }
+
+                ingredientGroups.clear()
+
+                existingRecipe.ingredientGroups.forEach { dbGroupData ->
+                    val newGroup = IngredientGroup().apply {
+                        this.title = dbGroupData.group.title
+                        this.ingredients.clear()
+
+                        dbGroupData.ingredients.forEach { dbIngredient ->
+                            ingredients.add(
+                                IngredientInput(
+                                    quantity = dbIngredient.quantity,
+                                    unit = dbIngredient.unit,
+                                    name = dbIngredient.name
+                                )
+                            )
+                        }
+                    }
+                    ingredientGroups.add(newGroup)
+                }
+
+                instructionGroups.clear()
+
+                existingRecipe.instructionGroups.forEach { dbGroupData ->
+                    val newGroup = InstructionGroup().apply {
+                        this.title = dbGroupData.group.title
+                        this.steps.clear()
+
+                        dbGroupData.steps.sortedBy { it.stepIndex }.forEach { dbStep ->
+                            steps.add(dbStep.text)
+                        }
+                    }
+                    instructionGroups.add(newGroup)
+                }
+            }
+        }
+    }
 
     Scaffold(
         // top bar : logo + nom
@@ -152,7 +208,12 @@ fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecip
 
             // --- titre principal ---
             Column {
-                Text(text = stringResource(R.string.add_recipe), style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onSurface)
+                val mainTitle = if (recipeIdToEdit != null) {
+                    stringResource(R.string.edit_recipe)
+                } else {
+                    stringResource(R.string.add_recipe)
+                }
+                Text(text = mainTitle, style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onSurface)
             }
 
             // --- photo(s) ---
@@ -780,8 +841,8 @@ fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecip
 
                     val uriStrings = selectedPhotoUris.map { it.toString() }
 
-                    viewModel.saveRecipeToDatabase(
-                        title, description, prepTime, servings, cookTime,
+                    viewModel.saveOrUpdateRecipe(
+                        recipeIdToEdit, title, description, prepTime, servings, cookTime,
                         coolingTime, freezingTime, selectedType,
                         ingredientGroups, instructionGroups, uriStrings
                     )
