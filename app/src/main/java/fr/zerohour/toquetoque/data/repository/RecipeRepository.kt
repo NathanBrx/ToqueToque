@@ -42,6 +42,10 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
         return recipeDao.getFullRecipeByIdSync(id)
     }
 
+    fun searchRecipes(query: String): Flow<List<FullRecipe>> {
+        return recipeDao.searchRecipes(query)
+    }
+
     suspend fun deleteRecipeById(id: String) {
         recipeDao.deleteRecipeById(id)
     }

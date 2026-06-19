@@ -133,7 +133,12 @@ fun MainScreen() {
 
             composable(Screen.Categories.route) {
                 HomeScreen(
-                    onCategoryClick = { categoryName -> navController.navigate("category/$categoryName")}
+                    onCategoryClick = {
+                        categoryName -> navController.navigate("category/$categoryName")
+                    },
+                    onRecipeClick = { recipeId ->
+                        navController.navigate("recipe_detail/$recipeId")
+                    }
                 )
             }
 

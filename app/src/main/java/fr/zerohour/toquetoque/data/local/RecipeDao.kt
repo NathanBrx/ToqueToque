@@ -71,6 +71,10 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE id = :recipeId")
     suspend fun getFullRecipeByIdSync(recipeId: String): FullRecipe?
 
+    @Transaction
+    @Query("SELECT * FROM recipes WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%'")
+    fun searchRecipes(query: String): Flow<List<FullRecipe>>
+
     // ------------------------------
     // Delete
     // ------------------------------

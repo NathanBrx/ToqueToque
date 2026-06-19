@@ -40,4 +40,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="edit_recipe">Edit recipe</string>
+    <string name="search_recipe">Search a recipe...</string>
+    <string name="start_typing">Start typing to search...</string>
+    <string name="no_recipes_found">No recipes found</string>
 </resources>

@@ -39,4 +39,7 @@
     <string name="delete">Supprimer</string>
     <string name="cancel">Annuler</string>
     <string name="edit_recipe">Modifier la recette</string>
+    <string name="search_recipe">Rechercher une recette...</string>
+    <string name="start_typing">Commencez à taper pour chercher...</string>
+    <string name="no_recipes_found">Aucune recette trouvée</string>
 </resources>
