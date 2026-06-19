@@ -1,5 +1,9 @@
 package fr.zerohour.toquetoque.ui.navigation
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -76,11 +80,54 @@ fun MainScreen() {
         NavHost(
             navController = navController,
             startDestination = Screen.Categories.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeIn(animationSpec = tween(200))
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -it / 3 },
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeOut(animationSpec = tween(200))
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it / 3 },
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeIn(animationSpec = tween(200))
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeOut(animationSpec = tween(200))
+            },
+
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = innerPadding.calculateBottomPadding())
         ) {
-            composable(Screen.Feed.route) {
+            composable(
+                Screen.Feed.route,
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(150)) },
+                popExitTransition = { fadeOut(animationSpec = tween(150)) }
+            ) {
                 Text("Feed Screen Placeholder", modifier = Modifier.padding(16.dp))
             }
 
@@ -128,6 +175,18 @@ fun MainScreen() {
                         defaultValue = null
                     }
                 ),
+                enterTransition = {
+                    slideInVertically(
+                        initialOffsetY = { fullHeight -> fullHeight },
+                        animationSpec = tween(400)
+                    ) + fadeIn(animationSpec = tween(400))
+                },
+                popExitTransition = {
+                    slideOutVertically(
+                        targetOffsetY = { fullHeight -> fullHeight },
+                        animationSpec = tween(400)
+                    ) + fadeOut(animationSpec = tween(400))
+                }
             ) { backStackEntry ->
                 val recipeIdToEdit = backStackEntry.arguments?.getString("recipeId")
 

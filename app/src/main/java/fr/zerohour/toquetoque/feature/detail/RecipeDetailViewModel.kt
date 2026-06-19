@@ -7,9 +7,11 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import fr.zerohour.toquetoque.ToqueToqueApp
 import fr.zerohour.toquetoque.data.local.FullRecipe
 import fr.zerohour.toquetoque.data.repository.RecipeRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class RecipeDetailViewModel(
     private val repository: RecipeRepository
@@ -20,6 +22,7 @@ class RecipeDetailViewModel(
 
     fun loadRecipe(recipeId: String) {
         viewModelScope.launch {
+            delay(300.milliseconds)
             repository.getFullRecipeById(recipeId).collect { fullRecipe ->
                 _recipeState.value = fullRecipe
             }
