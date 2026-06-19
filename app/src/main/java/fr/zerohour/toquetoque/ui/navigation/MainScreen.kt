@@ -194,6 +194,9 @@ fun MainScreen() {
                     recipeIdToEdit = recipeIdToEdit,
                     onSaveSuccess = {
                         navController.popBackStack()
+                    },
+                    onBackClick = {
+                        navController.popBackStack()
                     }
                 )
             }

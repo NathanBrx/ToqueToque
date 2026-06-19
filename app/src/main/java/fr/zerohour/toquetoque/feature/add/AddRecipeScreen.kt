@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -84,7 +85,12 @@ data class OptionalTimeConfig(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecipeViewModel.Factory), onSaveSuccess: () -> Unit, recipeIdToEdit: String? = null) {
+fun AddRecipeScreen(
+    viewModel: AddRecipeViewModel = viewModel(factory = AddRecipeViewModel.Factory),
+    onSaveSuccess: () -> Unit,
+    onBackClick: () -> Unit,
+    recipeIdToEdit: String? = null
+) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var prepTime by remember { mutableStateOf("") }
@@ -184,6 +190,17 @@ fun AddRecipeScreen(viewModel: AddRecipeViewModel = viewModel(factory = AddRecip
                             style = MaterialTheme.typography.headlineMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
+                    }
+                },
+                navigationIcon = {
+                    if (recipeIdToEdit != null) {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
