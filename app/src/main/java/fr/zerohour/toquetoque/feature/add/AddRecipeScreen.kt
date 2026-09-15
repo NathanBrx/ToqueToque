@@ -358,7 +358,7 @@ fun AddRecipeScreen(
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
                     // --- titre ---
-                    ToqueToqueInputField(value = title, onValueChange = { title = it }, placeholder = stringResource(R.string.title_example), label = stringResource(R.string.title))
+                    ToqueToqueInputField(value = title, onValueChange = { title = it }, placeholder = stringResource(R.string.title_example), label = stringResource(R.string.title) + "*")
 
                     // --- description ---
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -842,6 +842,8 @@ fun AddRecipeScreen(
                 }
             }
 
+            val isFormValid = title.isNotBlank()
+
             // --- bouton sauvegarder ---
             Button(
                 onClick = {
@@ -865,6 +867,7 @@ fun AddRecipeScreen(
                     )
                     onSaveSuccess()
                 },
+                enabled = isFormValid,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
