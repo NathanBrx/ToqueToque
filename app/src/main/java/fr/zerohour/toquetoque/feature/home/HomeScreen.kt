@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -37,6 +38,7 @@ import fr.zerohour.toquetoque.feature.category.RecipeListItem
 fun HomeScreen(
     onCategoryClick: (String) -> Unit,
     onRecipeClick: (String) -> Unit,
+    onOpenDrawer: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
 ) {
     var isSearching by remember { mutableStateOf(false) }
@@ -101,12 +103,17 @@ fun HomeScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Open Drawer */ }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                    if (isSearching) {
+                        IconButton(onClick = {
+                            isSearching = false
+                            viewModel.updateQuery("")
+                        }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Close Search", tint = MaterialTheme.colorScheme.primary)
+                        }
+                    } else {
+                        IconButton(onClick = onOpenDrawer) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = MaterialTheme.colorScheme.primary)
+                        }
                     }
                 },
                 actions = {
