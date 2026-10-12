@@ -14,8 +14,6 @@ import java.time.LocalDate
 
 class PlannerViewModel(private val repository: RecipeRepository) : ViewModel() {
 
-    private val _selectedDate = MutableStateFlow(LocalDate.now())
-
     val mealPlans: StateFlow<List<MealPlanWithRecipe>> = repository.getAllMealPlans()
         .stateIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(5000), initialValue = emptyList())
 

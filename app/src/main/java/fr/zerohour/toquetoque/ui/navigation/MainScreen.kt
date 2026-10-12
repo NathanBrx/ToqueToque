@@ -168,7 +168,11 @@ fun MainScreen(settingsManager: SettingsManager) {
                     popEnterTransition = { fadeIn(animationSpec = tween(150)) },
                     popExitTransition = { fadeOut(animationSpec = tween(150)) }
                 ) {
-                    PlannerScreen()
+                    PlannerScreen(
+                        onRecipeClick = { recipeId ->
+                            navController.navigate("recipe_detail/$recipeId")
+                        }
+                    )
                 }
 
                 composable(Screen.Categories.route) {

@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlannerScreen() {
+fun PlannerScreen(onRecipeClick: (String) -> Unit) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("Menu de la semaine", "Liste de courses")
 
@@ -96,14 +96,17 @@ fun PlannerScreen() {
             }
 
             when (selectedTabIndex) {
-                0 -> WeeklyMealPlannerView()
+                0 -> WeeklyMealPlannerView(onRecipeClick = onRecipeClick)
                 1 -> GroceryListView()
             }
         }
     }
 }
 @Composable
-fun WeeklyMealPlannerView(viewModel: PlannerViewModel = viewModel(factory = PlannerViewModel.Factory)) {
+fun WeeklyMealPlannerView(
+    onRecipeClick: (String) -> Unit,
+    viewModel: PlannerViewModel = viewModel(factory = PlannerViewModel.Factory)
+) {
     val mealPlans by viewModel.mealPlans.collectAsState()
     val allRecipes by viewModel.allRecipes.collectAsState()
 
@@ -243,7 +246,10 @@ fun WeeklyMealPlannerView(viewModel: PlannerViewModel = viewModel(factory = Plan
             ) {
                 items(mealsForSelectedDate, key = { it.mealPlan.id }) { plan ->
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .clickable { onRecipeClick(plan.recipe.id) },
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
                     ) {
                         Row(
