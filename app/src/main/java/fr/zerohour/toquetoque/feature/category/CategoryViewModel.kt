@@ -8,6 +8,7 @@ import fr.zerohour.toquetoque.ToqueToqueApp
 import fr.zerohour.toquetoque.data.local.FullRecipe
 import fr.zerohour.toquetoque.data.local.RecipeEntity
 import fr.zerohour.toquetoque.data.repository.RecipeRepository
+import fr.zerohour.toquetoque.feature.home.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -30,10 +31,13 @@ class CategoryViewModel(
 
     companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as ToqueToqueApp
-                return CategoryViewModel(application.repository) as T
+                if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
+                    val app = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as ToqueToqueApp
+                    val viewModel = CategoryViewModel(app.repository)
+                    return modelClass.cast(viewModel)!!
+                }
+                throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import fr.zerohour.toquetoque.ToqueToqueApp
 import fr.zerohour.toquetoque.data.local.*
 import fr.zerohour.toquetoque.data.repository.RecipeRepository
+import fr.zerohour.toquetoque.feature.category.CategoryViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -97,11 +98,13 @@ class AddRecipeViewModel(
 
     companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as ToqueToqueApp
-
-                return AddRecipeViewModel(application.repository) as T
+                if (modelClass.isAssignableFrom(AddRecipeViewModel::class.java)) {
+                    val app = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as ToqueToqueApp
+                    val viewModel = AddRecipeViewModel(app.repository)
+                    return modelClass.cast(viewModel)!!
+                }
+                throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }
         }
     }

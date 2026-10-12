@@ -39,10 +39,13 @@ class HomeViewModel(private val repository: RecipeRepository) : ViewModel() {
 
     companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as ToqueToqueApp
-                return HomeViewModel(application.repository) as T
+                if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+                    val app = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]) as ToqueToqueApp
+                    val viewModel = HomeViewModel(app.repository)
+                    return modelClass.cast(viewModel)!!
+                }
+                throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }
         }
     }
