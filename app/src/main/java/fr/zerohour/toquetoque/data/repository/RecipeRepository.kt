@@ -5,12 +5,18 @@ import fr.zerohour.toquetoque.data.local.IngredientEntity
 import fr.zerohour.toquetoque.data.local.IngredientGroupEntity
 import fr.zerohour.toquetoque.data.local.InstructionGroupEntity
 import fr.zerohour.toquetoque.data.local.InstructionStepEntity
+import fr.zerohour.toquetoque.data.local.MealPlanDao
+import fr.zerohour.toquetoque.data.local.MealPlanEntity
+import fr.zerohour.toquetoque.data.local.MealPlanWithRecipe
 import fr.zerohour.toquetoque.data.local.RecipeDao
 import fr.zerohour.toquetoque.data.local.RecipeEntity
 import fr.zerohour.toquetoque.data.local.RecipePhotoEntity
 import kotlinx.coroutines.flow.Flow
 
-class RecipeRepository(private val recipeDao: RecipeDao) {
+class RecipeRepository(
+    private val recipeDao: RecipeDao,
+    private val mealPlanDao: MealPlanDao
+) {
 
     suspend fun saveRecipe(
         recipe: RecipeEntity,
@@ -42,6 +48,10 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
         return recipeDao.getFullRecipeByIdSync(id)
     }
 
+    fun getAllRecipes(): Flow<List<FullRecipe>> {
+        return recipeDao.getAllRecipes()
+    }
+
     fun searchRecipes(query: String): Flow<List<FullRecipe>> {
         return recipeDao.searchRecipes(query)
     }
@@ -66,5 +76,17 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
             steps,
             photos
         )
+    }
+
+    fun getAllMealPlans(): Flow<List<MealPlanWithRecipe>> {
+        return mealPlanDao.getAllMealPlans()
+    }
+
+    suspend fun addMealPlan(date: String, recipeId: String) {
+        mealPlanDao.insertMealPlan(MealPlanEntity(date = date, recipeId = recipeId))
+    }
+
+    suspend fun removeMealPlan(planId: Long) {
+        mealPlanDao.deleteMealPlan(planId)
     }
 }

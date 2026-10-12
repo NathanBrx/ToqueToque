@@ -43,4 +43,8 @@
     <string name="search_recipe">Search a recipe...</string>
     <string name="start_typing">Start typing to search...</string>
     <string name="no_recipes_found">No recipes found</string>
+    <string name="no_meal_day">No meal planned that day</string>
+    <string name="add_meal">Add meal</string>
+    <string name="today">Today</string>
+    <string name="add_to_menu">Add to menu</string>
 </resources>

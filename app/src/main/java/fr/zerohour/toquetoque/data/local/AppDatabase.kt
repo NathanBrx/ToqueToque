@@ -10,11 +10,13 @@ import androidx.room.RoomDatabase
         IngredientEntity::class,
         InstructionGroupEntity::class,
         InstructionStepEntity::class,
-        RecipePhotoEntity::class
+        RecipePhotoEntity::class,
+        MealPlanEntity::class
     ],
     version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recipeDao(): RecipeDao
+    abstract fun mealPlanDao(): MealPlanDao
 }

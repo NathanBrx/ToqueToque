@@ -42,4 +42,8 @@
     <string name="search_recipe">Rechercher une recette...</string>
     <string name="start_typing">Commencez à taper pour chercher...</string>
     <string name="no_recipes_found">Aucune recette trouvée</string>
+    <string name="no_meal_day">Aucun repas prévu ce jour</string>
+    <string name="add_meal">Ajouter un repas</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="add_to_menu">Ajouter au menu</string>
 </resources>

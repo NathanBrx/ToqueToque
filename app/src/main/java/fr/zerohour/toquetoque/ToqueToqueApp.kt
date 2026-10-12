@@ -6,7 +6,6 @@ import fr.zerohour.toquetoque.data.local.AppDatabase
 import fr.zerohour.toquetoque.data.repository.RecipeRepository
 
 class ToqueToqueApp : Application() {
-
     private val database by lazy {
         Room.databaseBuilder(
             this,
@@ -16,6 +15,9 @@ class ToqueToqueApp : Application() {
     }
 
     val repository by lazy {
-        RecipeRepository(database.recipeDao())
+        RecipeRepository(
+            recipeDao = database.recipeDao(),
+            mealPlanDao = database.mealPlanDao()
+        )
     }
 }

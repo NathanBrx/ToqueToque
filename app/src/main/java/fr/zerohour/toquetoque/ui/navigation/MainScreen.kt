@@ -30,10 +30,11 @@ import fr.zerohour.toquetoque.feature.add.AddRecipeScreen
 import fr.zerohour.toquetoque.feature.category.CategoryScreen
 import fr.zerohour.toquetoque.feature.detail.RecipeDetailScreen
 import fr.zerohour.toquetoque.feature.home.HomeScreen
+import fr.zerohour.toquetoque.feature.planner.PlannerScreen
 import kotlinx.coroutines.launch
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    object Feed : Screen("feed", "Feed", Icons.Outlined.Dining)
+    object Planner : Screen("planner", "Organisation", Icons.Outlined.Dining)
     object Categories : Screen("categories", "Categories", Icons.Filled.Category)
     object Add : Screen("add", "Add", Icons.Outlined.Add)
 }
@@ -80,7 +81,7 @@ fun MainScreen(settingsManager: SettingsManager) {
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
                     tonalElevation = 8.dp
                 ) {
-                    val navigationItems = listOf(Screen.Feed, Screen.Categories, Screen.Add)
+                    val navigationItems = listOf(Screen.Planner, Screen.Categories, Screen.Add)
 
                     navigationItems.forEach { screen ->
                         NavigationBarItem(
@@ -91,9 +92,9 @@ fun MainScreen(settingsManager: SettingsManager) {
                                     style = MaterialTheme.typography.labelMedium
                                 )
                             },
-                            selected = currentRoute == screen.route,
+                            selected = currentRoute?.substringBefore("?") == screen.route,
                             onClick = {
-                                if (currentRoute != screen.route) {
+                                if (currentRoute?.substringBefore("?") != screen.route) {
                                     navController.navigate(screen.route) {
 
                                         popUpTo(navController.graph.findStartDestination().id) {
@@ -161,13 +162,13 @@ fun MainScreen(settingsManager: SettingsManager) {
                     .padding(bottom = innerPadding.calculateBottomPadding())
             ) {
                 composable(
-                    Screen.Feed.route,
+                    Screen.Planner.route,
                     enterTransition = { fadeIn(animationSpec = tween(150)) },
                     exitTransition = { fadeOut(animationSpec = tween(150)) },
                     popEnterTransition = { fadeIn(animationSpec = tween(150)) },
                     popExitTransition = { fadeOut(animationSpec = tween(150)) }
                 ) {
-                    Text("Feed Screen Placeholder", modifier = Modifier.padding(16.dp))
+                    PlannerScreen()
                 }
 
                 composable(Screen.Categories.route) {
