@@ -118,7 +118,7 @@ fun WeeklyMealPlannerView(viewModel: PlannerViewModel = viewModel(factory = Plan
     }
 
     // premier élément affiché : aujourd'hui
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = 14)
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = 7)
 
     val coroutineScope = rememberCoroutineScope()
     val today = remember { LocalDate.now() }
@@ -211,11 +211,11 @@ fun WeeklyMealPlannerView(viewModel: PlannerViewModel = viewModel(factory = Plan
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(
+                TextButton( // bouton pour retourner à aujourd'hui
                     onClick = {
                         selectedDate = today
                         coroutineScope.launch {
-                            listState.animateScrollToItem(14)
+                            listState.animateScrollToItem(7)
                         }
                     }
                 ) {
